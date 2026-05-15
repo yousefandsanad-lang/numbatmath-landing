@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Numbat Math — daily math practice for grades 3–5</title>
-<meta name="description" content="Numbat Math is a daily 10-minute math practice app for grades 3–5. AI tutor explains every wrong answer. Built for the summer ahead.">
-<meta property="og:title" content="Numbat Math">
-<meta property="og:description" content="Daily 10-minute math practice for grades 3–5. AI tutor explains every wrong answer.">
+<meta name="description" content="Numbat Math is a daily 10-minute math practice app for grades 3–5. AI tutor explains every wrong answer. Beta launching this summer — first 50 parents test before the App Store does.">
+<meta property="og:title" content="Numbat Math — beta access for parents">
+<meta property="og:description" content="Daily 10-minute math practice for grades 3–5. AI tutor explains every wrong answer. Beta launching this summer — first 50 parents test before the App Store does.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://numbatmath.com/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234D66FF'/%3E%3Ctext x='50' y='72' font-family='system-ui,sans-serif' font-size='70' font-weight='900' text-anchor='middle' fill='white'%3EN%3C/text%3E%3C/svg%3E">
@@ -95,6 +95,110 @@
     border-radius: 999px;
     font-size: 14px;
     font-weight: 600;
+  }
+
+  .signup {
+    max-width: 480px;
+    margin: 8px auto 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: left;
+  }
+  .signup .lead {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 0 14px;
+    text-align: center;
+  }
+  .signup .row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .signup input[type="email"],
+  .signup select {
+    font-family: inherit;
+    font-size: 16px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--text);
+    -webkit-appearance: none;
+    appearance: none;
+    line-height: 1.2;
+  }
+  .signup input[type="email"] {
+    flex: 2 1 60%;
+    min-width: 0;
+  }
+  .signup select {
+    flex: 1 1 40%;
+    background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%235C677D' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 32px;
+  }
+  .signup input:focus,
+  .signup select:focus {
+    outline: none;
+    border-color: var(--indigo);
+    box-shadow: 0 0 0 3px rgba(77, 102, 255, 0.18);
+  }
+  .signup button {
+    width: 100%;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 14px 16px;
+    border: 0;
+    border-radius: 10px;
+    background: var(--indigo);
+    color: #fff;
+    cursor: pointer;
+    transition: background 120ms ease;
+  }
+  .signup button:hover { background: var(--indigo-dark); }
+  .signup button:disabled { opacity: 0.6; cursor: progress; }
+  .signup .micro {
+    margin: 12px 0 0;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+  .signup .error {
+    margin: 10px 0 0;
+    color: #B0344B;
+    font-size: 14px;
+    text-align: center;
+  }
+  .signup.success {
+    text-align: center;
+    color: var(--text);
+  }
+  .signup.success .checkmark {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--indigo-tint);
+    color: var(--indigo-dark);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    font-weight: 800;
+    margin: 0 auto 12px;
+  }
+  .signup.success p { margin: 0; color: var(--text-muted); }
+  .signup.success p strong { color: var(--text); }
+
+  @media (max-width: 480px) {
+    .signup .row { flex-direction: column; }
+    .signup input[type="email"],
+    .signup select { width: 100%; }
   }
 
   .features {
@@ -200,8 +304,25 @@
 
 <section class="hero">
   <h1>Daily math practice<br>for grades 3–5.</h1>
-  <p class="tagline">Ten minutes a day. An AI tutor that explains every wrong answer. Built for the summer ahead.</p>
-  <span class="status">Coming soon to the App Store</span>
+  <p class="tagline">Ten minutes a day. An AI tutor that explains every wrong answer. Built for the summer ahead — and the school year after.</p>
+
+  <form class="signup" id="signup-form" novalidate>
+    <p class="lead">Beta launching this summer. The first 50 parents test before the App Store does.</p>
+    <div class="row">
+      <input type="email" id="signup-email" name="email" placeholder="parent@email.com" required autocomplete="email" inputmode="email">
+      <select id="signup-grade" name="kid_grade" required aria-label="Kid's grade">
+        <option value="" disabled selected>Kid's grade</option>
+        <option value="3">3rd grade</option>
+        <option value="4">4th grade</option>
+        <option value="5">5th grade</option>
+        <option value="multi">Multiple kids</option>
+        <option value="other">Other / not sure</option>
+      </select>
+    </div>
+    <button type="submit" id="signup-submit">Get the TestFlight invite</button>
+    <p class="micro">One email when iOS beta is ready. No spam, no list selling.</p>
+    <p class="error" id="signup-error" hidden></p>
+  </form>
 </section>
 
 <section class="features">
@@ -225,6 +346,7 @@
 <section class="about">
   <h2>Built by parents, for parents</h2>
   <p>Numbat Math is made for U.S. families with kids in grades 3, 4, and 5. The parent is always the legal account holder — kids can't sign up on their own. We don't sell data, we don't run ads, and the AI tutor never sees your kid's name.</p>
+  <p>This isn't a summer-only app. The summer regression piece is what got us building, but the roadmap goes year-round — STAAR practice for Texas families, state-test prep elsewhere, and ongoing topic packs as our own kids age into them.</p>
 
   <div class="legal">
     <p><strong>Operated by:</strong> Yousef and Sanad LLC, d/b/a Numbat Math<br>
@@ -240,6 +362,96 @@
     <a href="mailto:support@numbatmath.com">Support</a>
   </span>
 </footer>
+
+<script>
+(function () {
+  var SUPABASE_URL = 'https://bxhnszvmyyrxvhayrzcm.supabase.co';
+  var ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ4aG5zenZteXlyeHZoYXlyemNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzNjE0MDUsImV4cCI6MjA5MzkzNzQwNX0.8rkQfZp9kOJShi0nA-JjU-xkDDg-B3vKZ6vVsAIKbds';
+
+  var form = document.getElementById('signup-form');
+  var emailEl = document.getElementById('signup-email');
+  var gradeEl = document.getElementById('signup-grade');
+  var submitEl = document.getElementById('signup-submit');
+  var errorEl = document.getElementById('signup-error');
+
+  function getSource() {
+    var p = new URLSearchParams(window.location.search);
+    return p.get('src') || null;
+  }
+
+  function showError(msg) {
+    errorEl.textContent = msg;
+    errorEl.hidden = false;
+  }
+
+  function clearError() {
+    errorEl.textContent = '';
+    errorEl.hidden = true;
+  }
+
+  function showSuccess() {
+    var grade = gradeEl.value;
+    var label = grade === 'multi' ? 'kids' : (grade === 'other' || !grade ? 'kid' : 'kid');
+    form.classList.add('success');
+    form.innerHTML =
+      '<div class="checkmark">&#10003;</div>' +
+      '<p><strong>You’re on the list.</strong></p>' +
+      '<p style="margin-top:6px;">We’ll email when the iOS beta opens — one message, no spam.</p>';
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    clearError();
+
+    var email = (emailEl.value || '').trim();
+    var grade = gradeEl.value || null;
+    if (!email || email.indexOf('@') < 1) { showError('Please enter a valid email.'); return; }
+    if (!grade) { showError('Pick a grade so we can tailor the beta invite.'); return; }
+
+    submitEl.disabled = true;
+    submitEl.textContent = 'Adding you…';
+
+    var payload = {
+      email: email,
+      kid_grade: grade,
+      source: getSource(),
+      referrer: document.referrer || null,
+      user_agent: navigator.userAgent || null
+    };
+
+    fetch(SUPABASE_URL + '/rest/v1/email_signups', {
+      method: 'POST',
+      headers: {
+        'apikey': ANON_KEY,
+        'Authorization': 'Bearer ' + ANON_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(payload)
+    }).then(function (r) {
+      // 201 Created on success; 409 means duplicate email — also a "you're in" outcome.
+      if (r.status === 201 || r.status === 204 || r.status === 409) {
+        showSuccess();
+        return;
+      }
+      return r.text().then(function (body) {
+        // Postgres error code from the rate-limit trigger.
+        if (body && body.indexOf('rate_limited') !== -1) {
+          showError('Too many signups from your email’s domain right now — try again in a minute.');
+        } else {
+          showError('Something went wrong. Email support@numbatmath.com and we’ll add you manually.');
+        }
+        submitEl.disabled = false;
+        submitEl.textContent = 'Get the TestFlight invite';
+      });
+    }).catch(function () {
+      showError('Network problem. Check your connection and try again.');
+      submitEl.disabled = false;
+      submitEl.textContent = 'Get the TestFlight invite';
+    });
+  });
+})();
+</script>
 
 </body>
 </html>
