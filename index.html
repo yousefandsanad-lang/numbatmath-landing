@@ -374,6 +374,37 @@
   var submitEl = document.getElementById('signup-submit');
   var errorEl = document.getElementById('signup-error');
 
+  // Auto-refresh the spots-left badge from Supabase on page load.
+  // Falls back silently to the hardcoded text if the call fails so the
+  // page never renders a missing/broken element. When the cohort closes
+  // we keep the form working — post-20 signups still land in
+  // email_signups for follow-up about the next round.
+  (function updateSpots() {
+    var spotsEl = document.querySelector('.signup .spots');
+    var leadEl = document.querySelector('.signup .lead');
+    if (!spotsEl || !leadEl) return;
+    fetch(SUPABASE_URL + '/rest/v1/rpc/get_spots_remaining', {
+      method: 'POST',
+      headers: {
+        'apikey': ANON_KEY,
+        'Authorization': 'Bearer ' + ANON_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: '{}'
+    }).then(function (r) {
+      if (!r.ok) return null;
+      return r.json();
+    }).then(function (remaining) {
+      if (typeof remaining !== 'number') return;
+      if (remaining <= 0) {
+        spotsEl.textContent = 'Free-for-life beta closed';
+        leadEl.textContent = 'Sign up for the next round — beta launching this summer.';
+      } else {
+        spotsEl.textContent = remaining + ' of 20 spots left';
+      }
+    }).catch(function () { /* keep the static fallback text */ });
+  })();
+
   function getSource() {
     var p = new URLSearchParams(window.location.search);
     return p.get('src') || null;
