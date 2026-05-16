@@ -374,6 +374,16 @@
   var submitEl = document.getElementById('signup-submit');
   var errorEl = document.getElementById('signup-error');
 
+  // Tracked so the success handler can show the right message — free-for-life
+  // cohort vs waitlist. Pre-fetched at page load; null if the fetch failed
+  // (in which case showSuccess falls back to the generic "on the list" copy).
+  // Has a tiny race window: if two parents both load when spotsRemaining===1
+  // and submit simultaneously, both will see the free-for-life message even
+  // though only one of them got the last spot. Acceptable at current volume;
+  // we'd fix it server-side via an insert-and-return-cohort RPC if traffic
+  // ever made it matter.
+  var spotsRemaining = null;
+
   // Auto-refresh the spots-left badge from Supabase on page load.
   // Falls back silently to the hardcoded text if the call fails so the
   // page never renders a missing/broken element. When the cohort closes
@@ -396,6 +406,7 @@
       return r.json();
     }).then(function (remaining) {
       if (typeof remaining !== 'number') return;
+      spotsRemaining = remaining;
       if (remaining <= 0) {
         spotsEl.textContent = 'Free-for-life beta closed';
         leadEl.textContent = 'Sign up for the next round — beta launching this summer.';
@@ -421,13 +432,22 @@
   }
 
   function showSuccess() {
-    var grade = gradeEl.value;
-    var label = grade === 'multi' ? 'kids' : (grade === 'other' || !grade ? 'kid' : 'kid');
+    // If we know the cohort is full, be honest about it. Falls back to the
+    // generic "on the list" copy when spotsRemaining is null (fetch failed)
+    // or > 0 (cohort still open).
+    var isWaitlist = (spotsRemaining !== null && spotsRemaining <= 0);
     form.classList.add('success');
-    form.innerHTML =
-      '<div class="checkmark">&#10003;</div>' +
-      '<p><strong>You’re on the list.</strong></p>' +
-      '<p style="margin-top:6px;">We’ll email when the iOS beta opens — one message, no spam.</p>';
+    if (isWaitlist) {
+      form.innerHTML =
+        '<div class="checkmark">&#10003;</div>' +
+        '<p><strong>You’re on the waitlist.</strong></p>' +
+        '<p style="margin-top:6px;">The free-for-life beta cohort is full, but you’ll be first in line for early App Store access. One email when it’s ready, no spam.</p>';
+    } else {
+      form.innerHTML =
+        '<div class="checkmark">&#10003;</div>' +
+        '<p><strong>You’re on the list.</strong></p>' +
+        '<p style="margin-top:6px;">We’ll email when the iOS beta opens — one message, no spam.</p>';
+    }
   }
 
   form.addEventListener('submit', function (e) {
@@ -462,6 +482,12 @@
     }).then(function (r) {
       // 201 Created on success; 409 means duplicate email — also a "you're in" outcome.
       if (r.status === 201 || r.status === 204 || r.status === 409) {
+        // Only decrement on a real new insert (201/204). 409 means the row
+        // was already there from a prior signup so the cohort count didn't
+        // actually change.
+        if ((r.status === 201 || r.status === 204) && typeof spotsRemaining === 'number' && spotsRemaining > 0) {
+          spotsRemaining--;
+        }
         showSuccess();
         return;
       }
